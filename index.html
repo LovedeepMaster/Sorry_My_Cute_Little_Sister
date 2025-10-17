@@ -76,7 +76,18 @@
 
   .msg-tab{position:absolute;left:12px;right:12px;top:14%;z-index:30;display:none;justify-content:center;align-items:flex-start;pointer-events:auto}
   .msg-tab.show{display:flex}
-  .msg-box{width:100%;max-width:calc(var(--maxw)-56px);background:var(--panel);border-radius:14px;padding:18px 18px 14px;box-shadow:0 24px 60px rgba(12,8,6,0.12);max-height:56vh;overflow:auto;border:1px solid rgba(235,217,216,0.6)}
+  .msg-box{
+    width:100%;
+    max-width:calc(var(--maxw)-56px);
+    background:var(--panel);
+    border-radius:14px;
+    padding:24px 24px 20px;
+    box-shadow:0 24px 60px rgba(12,8,6,0.12);
+    max-height:none;
+    overflow:visible;
+    border:1px solid rgba(235,217,216,0.6);
+    margin-top:20px;
+  }
   .msg-body{color:var(--muted);line-height:1.6;white-space:pre-wrap;font-size:16px;margin:0 0 14px}
   .msg-actions{display:flex;gap:12px;justify-content:center}
   .next-btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;border:0;padding:12px 18px;border-radius:12px;font-weight:800;cursor:pointer;box-shadow:0 10px 28px rgba(240,140,140,0.12)}
@@ -445,3 +456,4 @@ lekin aap to DIDI ho 😘
 </script>
 </body>
 </html>
+
