@@ -197,29 +197,18 @@
     <div class="bg-icon heart" style="bottom:8%;left:48%;animation-delay:8.7s"></div>
     <div class="bg-icon flower" style="top:78%;right:18%;animation-delay:9.4s"></div>
 
-    <!-- message tabs (unchanged) -->
+    <!-- message tab (now dynamic, split into parts) -->
     <div class="msg-tab" id="msgTab" aria-hidden="true" role="region" aria-label="Message">
       <div class="msg-box" id="msgBox" tabindex="-1">
-        <div class="msg-body" id="msgBody">
-Ahhh 😒, dusri wali finger choose karni chahiye thi, ab pyaar se sorry kehna padega, bina attitude ke yaar. Shittt... Soooo...
-
-Hey, my little one,
-I know I messed up tomorrow… I said things I should’ve never said, and trust me, I’m feeling really awful about it. I can’t even sleep properly knowing I hurt you—someone so close, so special to me.
-
-You know me better than anyone—I’m not someone who throws harsh words at the people I love. But still, I slipped, and those words came out. I wish I could take them back right now. 💔
-
-You’ve always been the sweet, forgiving one… And just like before, I hope you can forgive me once more. I truly didn’t mean to disrespect you—it just happened in a moment, and I regret it deeply.
-
-You’re my little sister, my constant reason to smile, and I can’t stay at peace until you forgive me. So please, accept this small “sorry” wrapped with love, care, and a promise—that I’ll be more mindful from now on. 🫶✨
-
-I love you, my little troublemaker—please forgive your stupid brother once again. 🤍
-        </div>
+        <div class="msg-body" id="msgBody" aria-live="polite"></div>
         <div class="msg-actions">
-          <button class="next-btn" id="nextBtn">Click to Next</button>
+          <!-- single button which will change label from More -> ... -> Click to Next -->
+          <button class="next-btn" id="messageActionBtn">More</button>
         </div>
       </div>
     </div>
 
+    <!-- second small message tab (screen C) unchanged -->
     <div class="msg-tab" id="msgTabC" aria-hidden="true" role="region" aria-label="Message C">
       <div class="msg-box" id="msgBoxC" tabindex="-1">
         <div class="msg-body" id="msgBodyC">
@@ -310,17 +299,39 @@ lekin aap to DIDI ho 😘
     const screenC = document.getElementById('screenC');
     const screenD = document.getElementById('screenD');
     const cta = document.getElementById('primaryCTA');
-    const msgTab = document.getElementById('msgTab');
-    const nextBtn = document.getElementById('nextBtn');
 
+    // message tab (split into multiple parts)
+    const msgTab = document.getElementById('msgTab');
+    const msgBody = document.getElementById('msgBody');
+    const messageActionBtn = document.getElementById('messageActionBtn');
+
+    // second small tab (screen C)
     const msgTabC = document.getElementById('msgTabC');
     const nextBtnC = document.getElementById('nextBtnC');
 
-    // gift elements (simplified)
+    // gift elements
     const giftBox = document.getElementById('giftBox');
     const surprise = document.getElementById('surprise');
     const giftCta = document.getElementById('giftCta');
     const giftNextBtn = document.getElementById('giftNextBtn');
+
+    // message parts array (exact text pieces you provided)
+    const parts = [
+`Ahhh 😒, dusri wali finger choose karni chahiye thi, ab pyaar se sorry kehna padega, bina attitude ke yaar. Shittt... Soooo...`,
+
+`Hey, my little one, 
+I know I'll mess up tomorrow… I said things I should’ve never said, and trust me, I’m feeling really awful about it. I can’t even sleep properly knowing I hurt you—someone so close, so special to me.`,
+
+`You know me better than anyone—I’m not someone who throws harsh words at the people I love. But still, I slipped, and those words came out. I wish I could take them back right now. 💔`,
+
+`—You’ve always been the sweet, forgiving one… And just like before, I hope you can forgive me once more. I truly didn’t mean to disrespect you—it just happened in a moment, and I regret it deeply.`,
+
+`—You’re my little sister, my constant reason to smile, and I can’t stay at peace until you forgive me. So please, accept this small “sorry” wrapped with love, care, and a promise—that I’ll be more mindful from now on. 🫶✨`,
+
+`I love you, my little troublemaker—please forgive your stupid brother once again. 🤍`
+    ];
+
+    let partIndex = 0;
 
     function goToScreen(screenId, push=true){
       [screenA, screenB, screenC, screenD].forEach(s => s.classList.add('hidden'));
@@ -361,17 +372,39 @@ lekin aap to DIDI ho 😘
       else goToScreen('screenA', false);
     });
 
-    // screen B: open message
+    // when a finger on screen B is clicked -> open multi-part message
     const fingerButtonsB = screenB.querySelectorAll('.finger-btn');
-    fingerButtonsB.forEach(btn => btn.addEventListener('click', () => { openMessageTab(); }));
+    fingerButtonsB.forEach(btn => btn.addEventListener('click', function(){
+      // reset to first part and show
+      partIndex = 0;
+      msgBody.textContent = parts[partIndex];
+      messageActionBtn.textContent = (parts.length > 1) ? 'More' : 'Click to Next';
+      msgTab.classList.add('show');
+      msgTab.setAttribute('aria-hidden','false');
+      messageActionBtn.focus();
+    }));
 
-    function openMessageTab(){
-      msgTab.classList.add('show'); msgTab.setAttribute('aria-hidden','false'); nextBtn.focus();
-    }
-    function closeMessageTab(){ msgTab.classList.remove('show'); msgTab.setAttribute('aria-hidden','true'); }
-    nextBtn.addEventListener('click', function(){ closeMessageTab(); goToScreen('screenC', true); });
+    // messageActionBtn handles stepping through parts and final transition
+    messageActionBtn.addEventListener('click', function(){
+      // if not last -> advance
+      if(partIndex < parts.length - 1){
+        partIndex++;
+        msgBody.textContent = parts[partIndex];
+        // if now last part, change label to "Click to Next"
+        if(partIndex === parts.length - 1){
+          messageActionBtn.textContent = 'Click to Next';
+        } else {
+          messageActionBtn.textContent = 'More';
+        }
+      } else {
+        // final -> close tab and go to screenC
+        msgTab.classList.remove('show');
+        msgTab.setAttribute('aria-hidden','true');
+        goToScreen('screenC', true);
+      }
+    });
 
-    // screen C finger behavior -> message C
+    // screen C finger behavior -> message C (unchanged)
     const fingerButtonsC = screenC.querySelectorAll('.finger-btn');
     fingerButtonsC.forEach(btn => {
       btn.addEventListener('click', ()=> {
@@ -456,4 +489,3 @@ lekin aap to DIDI ho 😘
 </script>
 </body>
 </html>
-
