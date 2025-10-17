@@ -180,6 +180,30 @@
     .box-lid{width:180px;height:44px}
     .surprise img{max-width:110px}
   }
+
+  @media (max-height: 760px) {
+  body {
+    align-items: flex-start;   /* don't vertically center on short screens */
+    padding-top: 36px;         /* create breathing room from the top edge */
+    padding-bottom: 36px;
+  }
+
+  .frame {
+    margin-top: 8px;           /* small extra push down */
+  }
+
+  h1 {
+    font-size: 30px;           /* slightly smaller heading on short screens */
+    line-height: 1.05;
+  }
+}
+
+/* extra safety for very narrow windows (phones in landscape, tiny panes) */
+@media (max-height: 520px) {
+  h1 { font-size: 26px; }
+  .visual img { max-width: 300px; }
+  .pill { font-size: 18px; padding:14px 20px; }
+}
 </style>
 </head>
 <body>
@@ -488,6 +512,7 @@ I know I'll mess up tomorrow… I said things I should’ve never said, and trus
 </script>
 </body>
 </html>
+
 
 
 
